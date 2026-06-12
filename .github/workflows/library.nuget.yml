@@ -20,10 +20,10 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Install dependencies
-        run: dotnet restore src/LiteObservableConverters/LiteObservableConverters.csproj
+        run: dotnet restore src/LiteObservableConverters.WPF/LiteObservableConverters.WPF.csproj
 
       - name: Build
-        run: dotnet build src/LiteObservableConverters/LiteObservableConverters.csproj --configuration Release --no-restore
+        run: dotnet build src/LiteObservableConverters.WPF/LiteObservableConverters.WPF.csproj --configuration Release --no-restore
 
       - name: Push NuGet package
         # run:  dotnet nuget push "out\*.nupkg" -k ${{secrets.NUGET_AUTH_TOKEN}} --source https://api.nuget.org/v3/index.json

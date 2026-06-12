@@ -1,4 +1,4 @@
-Set-Location $PSScriptRoot
+﻿Set-Location $PSScriptRoot
 
 Write-Host @"
 ███╗   ██╗██╗   ██╗ ██████╗ ███████╗████████╗
@@ -10,7 +10,7 @@ Write-Host @"
 "@
 
 $projects = @(
-    "..\src\LiteObservableConverters"
+    "..\src\LiteObservableConverters.WPF"
 )
 
 foreach ($proj in $projects) {

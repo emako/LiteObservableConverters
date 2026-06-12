@@ -6,8 +6,9 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<Version>1.0.0</Version>
-		<RootNamespace>$(AssemblyName)</RootNamespace>
-		<PackageId>$(AssemblyName)</PackageId>
+		<AssemblyName>LiteObservableConverters</AssemblyName>
+		<RootNamespace>LiteObservableConverters</RootNamespace>
+		<PackageId>LiteObservableConverters</PackageId>
 		<Authors>ema</Authors>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/emako/LiteObservableConverters</RepositoryUrl>
