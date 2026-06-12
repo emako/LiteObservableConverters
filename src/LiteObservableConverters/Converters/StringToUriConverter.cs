@@ -1,0 +1,33 @@
+﻿using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+
+namespace LiteObservableConverters;
+
+[ValueConversion(typeof(string), typeof(object))]
+public sealed class StringToUriConverter : SingletonValueConverterBase<StringToUriConverter>
+{
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string uriString)
+        {
+            if (Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out Uri? uri))
+            {
+                return uri;
+            }
+        }
+
+        return DependencyProperty.UnsetValue;
+    }
+
+    public override object? ConvertBack(object? value, Type targetTypes, object? parameter, CultureInfo culture)
+    {
+        if (value is Uri uri)
+        {
+            return uri.ToString();
+        }
+
+        return DependencyProperty.UnsetValue;
+    }
+}

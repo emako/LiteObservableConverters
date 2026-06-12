@@ -1,0 +1,29 @@
+﻿using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+
+namespace LiteObservableConverters;
+
+[ValueConversion(typeof(object), typeof(bool))]
+public class IsNullConverter : SingletonValueConverterBase<IsNullConverter>
+{
+    public static readonly DependencyProperty IsInvertedProperty =
+        DependencyProperty.Register(nameof(IsInverted), typeof(bool), typeof(IsNullConverter), new PropertyMetadata(false));
+
+    public bool IsInverted
+    {
+        get => (bool)GetValue(IsInvertedProperty);
+        set => SetValue(IsInvertedProperty, value);
+    }
+
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value == null ^ IsInverted;
+    }
+
+    public override object? ConvertBack(object? value, Type targetTypes, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}

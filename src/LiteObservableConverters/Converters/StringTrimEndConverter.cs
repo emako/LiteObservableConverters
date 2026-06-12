@@ -1,0 +1,23 @@
+﻿using System;
+using System.Globalization;
+using System.Windows.Data;
+
+namespace LiteObservableConverters;
+
+[ValueConversion(typeof(string), typeof(string))]
+public sealed class StringTrimEndConverter : SingletonValueConverterBase<StringTrimEndConverter>
+{
+    public override object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (parameter is string trimChars && !string.IsNullOrEmpty(trimChars))
+        {
+            return value?.ToString()?.TrimEnd(trimChars.ToCharArray());
+        }
+        return value?.ToString()?.TrimEnd();
+    }
+
+    public override object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return parameter;
+    }
+}
