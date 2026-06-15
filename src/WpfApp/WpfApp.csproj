@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\LiteObservableConverters\LiteObservableConverters.csproj" />
+        <ProjectReference Include="..\LiteObservableConverters.WPF\LiteObservableConverters.WPF.csproj" />
     </ItemGroup>
 
 </Project>
