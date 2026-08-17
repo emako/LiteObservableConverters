@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace DynamicExpresso.Reflection;
+namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
 internal static class ReflectionExtensions
 {

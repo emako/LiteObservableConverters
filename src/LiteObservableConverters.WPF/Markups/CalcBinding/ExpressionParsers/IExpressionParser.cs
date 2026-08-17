@@ -1,7 +1,7 @@
-﻿using DynamicExpresso;
+using LiteObservableConverters.DynamicExpresso;
 using System.Collections.Generic;
 
-namespace CalcBinding.ExpressionParsers;
+namespace LiteObservableConverters.CalcBinding.ExpressionParsers;
 
 public interface IExpressionParser
 {

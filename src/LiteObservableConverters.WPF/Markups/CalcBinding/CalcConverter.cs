@@ -1,7 +1,7 @@
-﻿using CalcBinding.ExpressionParsers;
-using CalcBinding.Inversion;
-using CalcBinding.Trace;
-using DynamicExpresso;
+using LiteObservableConverters.CalcBinding.ExpressionParsers;
+using LiteObservableConverters.CalcBinding.Inversion;
+using LiteObservableConverters.CalcBinding.Trace;
+using LiteObservableConverters.DynamicExpresso;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Data;
 using Expression = System.Linq.Expressions.Expression;
 
-namespace CalcBinding;
+namespace LiteObservableConverters.CalcBinding;
 
 /// <summary>
 /// Converter that supports expression evaluate

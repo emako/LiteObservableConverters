@@ -1,10 +1,10 @@
-﻿using CalcBinding.Trace;
+using LiteObservableConverters.CalcBinding.Trace;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Markup;
 
-namespace CalcBinding.PathAnalysis;
+namespace LiteObservableConverters.CalcBinding.PathAnalysis;
 
 /// <summary>
 /// Idea of parser: to detect right all entries of property pathes, static property pathes etc. without parsing language structures

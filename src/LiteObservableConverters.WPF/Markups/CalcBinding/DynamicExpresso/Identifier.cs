@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Reflection;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 public class Identifier
 {

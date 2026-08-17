@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace DynamicExpresso
+namespace LiteObservableConverters.DynamicExpresso
 {
 	[Flags]
 	public enum AssignmentOperators

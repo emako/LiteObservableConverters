@@ -1,4 +1,4 @@
-﻿namespace CalcBinding.PathAnalysis;
+namespace LiteObservableConverters.CalcBinding.PathAnalysis;
 
 public abstract class PathToken(int start, int end)
 {

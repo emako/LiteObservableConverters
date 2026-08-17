@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using DynamicExpresso.Exceptions;
+using LiteObservableConverters.DynamicExpresso.Exceptions;
 
-namespace DynamicExpresso.Visitors
+namespace LiteObservableConverters.DynamicExpresso.Visitors
 {
 	public class DisableReflectionVisitor : ExpressionVisitor
 	{

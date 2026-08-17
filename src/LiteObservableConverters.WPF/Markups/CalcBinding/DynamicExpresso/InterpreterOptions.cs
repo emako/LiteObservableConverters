@@ -1,6 +1,6 @@
 using System;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 [Flags]
 public enum InterpreterOptions

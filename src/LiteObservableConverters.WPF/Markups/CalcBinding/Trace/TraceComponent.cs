@@ -1,4 +1,4 @@
-﻿namespace CalcBinding.Trace;
+namespace LiteObservableConverters.CalcBinding.Trace;
 
 public enum TraceComponent
 {

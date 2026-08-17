@@ -1,6 +1,6 @@
 using System;
 
-namespace DynamicExpresso.Exceptions;
+namespace LiteObservableConverters.DynamicExpresso.Exceptions;
 
 [Serializable]
 public class DynamicExpressoException : Exception

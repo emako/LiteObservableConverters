@@ -4,10 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using DynamicExpresso.Reflection;
-using DynamicExpresso.Resources;
+using LiteObservableConverters.DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Resources;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 /// <summary>
 /// Represents a lambda expression that can be invoked. This class is thread safe.

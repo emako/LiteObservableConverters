@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using DynamicExpresso.Resolution;
+using LiteObservableConverters.DynamicExpresso.Resolution;
 
-namespace DynamicExpresso.Reflection;
+namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
 internal class MemberFinder
 {

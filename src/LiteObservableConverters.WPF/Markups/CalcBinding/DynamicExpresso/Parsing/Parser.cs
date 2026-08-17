@@ -6,10 +6,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using DynamicExpresso.Exceptions;
-using DynamicExpresso.Reflection;
-using DynamicExpresso.Resolution;
-using DynamicExpresso.Resources;
+using LiteObservableConverters.DynamicExpresso.Exceptions;
+using LiteObservableConverters.DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Resolution;
+using LiteObservableConverters.DynamicExpresso.Resources;
 using Microsoft.CSharp.RuntimeBinder;
 
 // Code based on the Dynamic.cs file of the DynamicQuery sample by Microsoft
@@ -18,7 +18,7 @@ using Microsoft.CSharp.RuntimeBinder;
 //
 // Copyright (C) Microsoft Corporation.  All rights reserved.
 
-namespace DynamicExpresso.Parsing;
+namespace LiteObservableConverters.DynamicExpresso.Parsing;
 
 internal class Parser
 {

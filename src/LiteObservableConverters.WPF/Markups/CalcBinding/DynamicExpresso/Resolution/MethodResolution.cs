@@ -4,12 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Security;
-using DynamicExpresso.Exceptions;
-using DynamicExpresso.Parsing;
-using DynamicExpresso.Reflection;
-using DynamicExpresso.Resources;
+using LiteObservableConverters.DynamicExpresso.Exceptions;
+using LiteObservableConverters.DynamicExpresso.Parsing;
+using LiteObservableConverters.DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Resources;
 
-namespace DynamicExpresso.Resolution;
+namespace LiteObservableConverters.DynamicExpresso.Resolution;
 
 internal static class MethodResolution
 {

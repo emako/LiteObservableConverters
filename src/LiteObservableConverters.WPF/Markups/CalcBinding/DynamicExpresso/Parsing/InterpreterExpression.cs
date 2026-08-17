@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DynamicExpresso.Exceptions;
-using DynamicExpresso.Reflection;
-using DynamicExpresso.Resources;
+using LiteObservableConverters.DynamicExpresso.Exceptions;
+using LiteObservableConverters.DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Resources;
 
-namespace DynamicExpresso.Parsing;
+namespace LiteObservableConverters.DynamicExpresso.Parsing;
 
 internal class InterpreterExpression : Expression
 {

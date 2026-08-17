@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
-namespace CalcBinding.Inversion;
+namespace LiteObservableConverters.CalcBinding.Inversion;
 
 [Serializable]
 public class InverseException : Exception

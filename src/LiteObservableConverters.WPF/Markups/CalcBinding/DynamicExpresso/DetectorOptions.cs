@@ -1,6 +1,6 @@
 using System;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 /// <summary>
 /// Option to set the detector variable level

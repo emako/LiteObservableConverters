@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
-namespace CalcBinding.Trace;
+namespace LiteObservableConverters.CalcBinding.Trace;
 
 public sealed class Tracer
 {

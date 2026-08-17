@@ -1,9 +1,9 @@
-﻿using DynamicExpresso;
+using LiteObservableConverters.DynamicExpresso;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CalcBinding.ExpressionParsers;
+namespace LiteObservableConverters.CalcBinding.ExpressionParsers;
 
 public sealed class CachedExpressionParser : IExpressionParser
 {

@@ -1,4 +1,4 @@
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 /// <summary>
 /// Setting the default number types when no suffix is specified

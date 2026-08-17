@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace CalcBinding.PathAnalysis;
+namespace LiteObservableConverters.CalcBinding.PathAnalysis;
 
 public class StaticPropertyPathToken : PropertyPathToken
 {

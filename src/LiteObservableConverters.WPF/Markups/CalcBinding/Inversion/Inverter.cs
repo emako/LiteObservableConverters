@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
-using CalcBinding.ExpressionParsers;
-using DynamicExpresso;
+using LiteObservableConverters.CalcBinding.ExpressionParsers;
+using LiteObservableConverters.DynamicExpresso;
 
-namespace CalcBinding.Inversion;
+namespace LiteObservableConverters.CalcBinding.Inversion;
 
 /// <summary>
 /// Validate and inverse expression of one parameter

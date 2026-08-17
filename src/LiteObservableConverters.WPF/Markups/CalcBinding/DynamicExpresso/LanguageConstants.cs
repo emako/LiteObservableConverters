@@ -1,8 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using DynamicExpresso.Parsing;
+using LiteObservableConverters.DynamicExpresso.Parsing;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 public static class LanguageConstants
 {

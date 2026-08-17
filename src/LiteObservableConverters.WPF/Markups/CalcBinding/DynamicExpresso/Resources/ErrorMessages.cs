@@ -1,4 +1,4 @@
-namespace DynamicExpresso.Resources;
+namespace LiteObservableConverters.DynamicExpresso.Resources;
 
 internal static class ErrorMessages
 {

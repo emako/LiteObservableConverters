@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Reflection;
 
-namespace DynamicExpresso.Parsing;
+namespace LiteObservableConverters.DynamicExpresso.Parsing;
 
 /// <summary>
 /// Contains all the signatures for the binary and unary operators supported by DynamicExpresso.

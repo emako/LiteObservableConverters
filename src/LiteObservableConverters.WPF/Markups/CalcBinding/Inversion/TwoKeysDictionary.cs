@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace CalcBinding.Inversion;
+namespace LiteObservableConverters.CalcBinding.Inversion;
 
 /// <summary>
 /// Two keys dictionary

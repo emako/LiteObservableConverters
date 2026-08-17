@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace DynamicExpresso.Reflection;
+namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
 internal class MethodData
 {

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using DynamicExpresso.Exceptions;
-using DynamicExpresso.Parsing;
-using DynamicExpresso.Reflection;
-using DynamicExpresso.Resources;
-using DynamicExpresso.Visitors;
+using LiteObservableConverters.DynamicExpresso.Exceptions;
+using LiteObservableConverters.DynamicExpresso.Parsing;
+using LiteObservableConverters.DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Resources;
+using LiteObservableConverters.DynamicExpresso.Visitors;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 /// <summary>
 /// Class used to parse and compile a text expression into an Expression or a Delegate that can be invoked. Expression are written using a subset of C# syntax.

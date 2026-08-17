@@ -3,10 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Reflection;
 using Microsoft.CSharp.RuntimeBinder;
 
-namespace DynamicExpresso.Resolution;
+namespace LiteObservableConverters.DynamicExpresso.Resolution;
 
 internal interface IConvertibleToWritableBinder
 {

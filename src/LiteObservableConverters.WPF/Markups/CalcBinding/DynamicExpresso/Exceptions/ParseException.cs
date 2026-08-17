@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.Serialization;
-using DynamicExpresso.Resources;
+using LiteObservableConverters.DynamicExpresso.Resources;
 
-namespace DynamicExpresso.Exceptions;
+namespace LiteObservableConverters.DynamicExpresso.Exceptions;
 
 [Serializable]
 public class ParseException : DynamicExpressoException

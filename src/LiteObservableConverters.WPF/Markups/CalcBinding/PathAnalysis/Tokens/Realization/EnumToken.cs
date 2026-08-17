@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace CalcBinding.PathAnalysis;
+namespace LiteObservableConverters.CalcBinding.PathAnalysis;
 
 public class EnumToken : PathToken
 {

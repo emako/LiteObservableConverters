@@ -1,5 +1,5 @@
-﻿using CalcBinding.ExpressionParsers;
-using CalcBinding.PathAnalysis;
+using LiteObservableConverters.CalcBinding.ExpressionParsers;
+using LiteObservableConverters.CalcBinding.PathAnalysis;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace CalcBinding;
+namespace LiteObservableConverters.CalcBinding;
 
 /// <summary>
 /// Binding with advantages

@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
-using DynamicExpresso.Parsing;
-using DynamicExpresso.Reflection;
+using LiteObservableConverters.DynamicExpresso.Parsing;
+using LiteObservableConverters.DynamicExpresso.Reflection;
 
-namespace DynamicExpresso.Resolution;
+namespace LiteObservableConverters.DynamicExpresso.Resolution;
 
 internal static class ExpressionUtils
 {

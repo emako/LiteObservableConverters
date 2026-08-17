@@ -1,4 +1,4 @@
-﻿namespace CalcBinding.ExpressionParsers;
+namespace LiteObservableConverters.CalcBinding.ExpressionParsers;
 
 public sealed class ParserFactory
 {

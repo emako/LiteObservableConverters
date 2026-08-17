@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 /// <summary>
 /// An expression parameter. This class is thread safe.

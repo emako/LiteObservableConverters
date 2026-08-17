@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace DynamicExpresso.Reflection;
+namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
 internal class IndexerData : MethodData
 {

@@ -1,4 +1,4 @@
-namespace DynamicExpresso.Parsing;
+namespace LiteObservableConverters.DynamicExpresso.Parsing;
 
 internal enum TokenId
 {

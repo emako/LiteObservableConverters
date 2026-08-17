@@ -1,4 +1,4 @@
-﻿namespace CalcBinding;
+namespace LiteObservableConverters.CalcBinding;
 
 /// <summary>
 /// Enum for BoolToVisibility converter: in which property convert "false" value?

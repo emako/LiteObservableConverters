@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace DynamicExpresso.Reflection;
+namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
 /// <summary>
 /// A simple implementation of <see cref="MethodBase"/> that only provides the method signature (ie. the parameter types).

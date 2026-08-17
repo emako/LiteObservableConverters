@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using DynamicExpresso.Parsing;
+using LiteObservableConverters.DynamicExpresso.Parsing;
 
-namespace DynamicExpresso;
+namespace LiteObservableConverters.DynamicExpresso;
 
 [SuppressMessage("GeneratedRegex", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.")]
 [SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression")]
