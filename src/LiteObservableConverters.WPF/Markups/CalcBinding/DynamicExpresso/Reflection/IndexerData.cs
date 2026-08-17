@@ -19,7 +19,7 @@ internal class IndexerData : MethodData
         else
         {
             method = indexer.GetSetMethod();
-            Parameters = RemoveLast(method.GetParameters());
+            Parameters = RemoveLast(method!.GetParameters());
         }
     }
 

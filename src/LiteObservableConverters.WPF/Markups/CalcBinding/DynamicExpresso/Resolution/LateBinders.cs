@@ -13,22 +13,15 @@ internal interface IConvertibleToWritableBinder
     CallSiteBinder ToWritableBinder();
 }
 
-internal class LateGetMemberCallSiteBinder : CallSiteBinder, IConvertibleToWritableBinder
+internal class LateGetMemberCallSiteBinder(string propertyOrFieldName) : CallSiteBinder, IConvertibleToWritableBinder
 {
-    private readonly string _propertyOrFieldName;
-
-    public LateGetMemberCallSiteBinder(string propertyOrFieldName)
-    {
-        _propertyOrFieldName = propertyOrFieldName;
-    }
-
     public override Expression Bind(object[] args, ReadOnlyCollection<ParameterExpression> parameters, LabelTarget returnLabel)
     {
         // there's only one argument: the instance on which the member is accessed
         var binder = Binder.GetMember(
             CSharpBinderFlags.None,
-            _propertyOrFieldName,
-            TypeUtils.RemoveArrayType(args[0]?.GetType()),
+            propertyOrFieldName,
+            TypeUtils.RemoveArrayType(args[0]?.GetType()!),
             parameters.Select(x => CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null))
         );
         return binder.Bind(args, parameters, returnLabel);
@@ -36,26 +29,19 @@ internal class LateGetMemberCallSiteBinder : CallSiteBinder, IConvertibleToWrita
 
     public CallSiteBinder ToWritableBinder()
     {
-        return new LateSetMemberCallSiteBinder(_propertyOrFieldName);
+        return new LateSetMemberCallSiteBinder(propertyOrFieldName);
     }
 }
 
-internal class LateSetMemberCallSiteBinder : CallSiteBinder
+internal class LateSetMemberCallSiteBinder(string propertyOrFieldName) : CallSiteBinder
 {
-    private readonly string _propertyOrFieldName;
-
-    public LateSetMemberCallSiteBinder(string propertyOrFieldName)
-    {
-        _propertyOrFieldName = propertyOrFieldName;
-    }
-
     public override Expression Bind(object[] args, ReadOnlyCollection<ParameterExpression> parameters, LabelTarget returnLabel)
     {
         // there are two arguments: the instance on which the member is set and the value to set
         var binder = Binder.SetMember(
             CSharpBinderFlags.None,
-            _propertyOrFieldName,
-            TypeUtils.RemoveArrayType(args[0]?.GetType()),
+            propertyOrFieldName,
+            TypeUtils.RemoveArrayType(args[0]?.GetType()!),
             parameters.Select(x => CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null))
         );
         return binder.Bind(args, parameters, returnLabel);
@@ -65,24 +51,15 @@ internal class LateSetMemberCallSiteBinder : CallSiteBinder
 /// <summary>
 /// Binds to a method invocation of an instance as late as possible.  This allows the use of anonymous types on dynamic values.
 /// </summary>
-internal class LateInvokeMethodCallSiteBinder : CallSiteBinder
+internal class LateInvokeMethodCallSiteBinder(string methodName, bool isStatic) : CallSiteBinder
 {
-    private readonly string _methodName;
-    private readonly bool _isStatic;
-
-    public LateInvokeMethodCallSiteBinder(string methodName, bool isStatic)
-    {
-        _methodName = methodName;
-        _isStatic = isStatic;
-    }
-
     public override Expression Bind(object[] args, ReadOnlyCollection<ParameterExpression> parameters, LabelTarget returnLabel)
     {
         // if the method is static, the first argument is the type containing the method,
         // otherwise it's the instance on which the method is called
-        var context = _isStatic ? (Type)args[0] : args[0]?.GetType();
+        var context = isStatic ? (Type)args[0] : args[0]?.GetType();
         var argumentInfo = parameters.Select(x => CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null)).ToArray();
-        if (_isStatic)
+        if (isStatic)
         {
             // instruct the compiler that we already know the containing type of the method
             argumentInfo[0] = CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType | CSharpArgumentInfoFlags.IsStaticType, null);
@@ -90,9 +67,9 @@ internal class LateInvokeMethodCallSiteBinder : CallSiteBinder
 
         var binderM = Binder.InvokeMember(
             CSharpBinderFlags.None,
-            _methodName,
+            methodName,
             null,
-            TypeUtils.RemoveArrayType(context),
+            TypeUtils.RemoveArrayType(context!),
             argumentInfo
         );
         return binderM.Bind(args, parameters, returnLabel);
@@ -134,7 +111,7 @@ internal class LateGetIndexCallSiteBinder : CallSiteBinder, IConvertibleToWritab
         // there are two arguments: the instance on which the member is set and the value of the indexer
         var binder = Binder.GetIndex(
             CSharpBinderFlags.None,
-            TypeUtils.RemoveArrayType(args[0]?.GetType()),
+            TypeUtils.RemoveArrayType(args[0]?.GetType()!),
             parameters.Select(x => CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null))
         );
         return binder.Bind(args, parameters, returnLabel);
@@ -153,7 +130,7 @@ internal class LateSetIndexCallSiteBinder : CallSiteBinder
         // there are three arguments: the instance on which the member is set, the value of the indexer, and the value to set
         var binder = Binder.SetIndex(
             CSharpBinderFlags.None,
-            TypeUtils.RemoveArrayType(args[0]?.GetType()),
+            TypeUtils.RemoveArrayType(args[0]?.GetType()!),
             parameters.Select(x => CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null))
         );
         return binder.Bind(args, parameters, returnLabel);

@@ -11,6 +11,12 @@ using System.Windows.Markup;
 
 namespace LiteObservableConverters.CalcBinding;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1510
+#pragma warning disable CA1822
+#pragma warning disable CA1854
+#pragma warning disable CS8618
+
 /// <summary>
 /// Binding with advantages
 /// </summary>
@@ -46,7 +52,7 @@ public sealed class Binding : MarkupExtension
         Mode = BindingMode.Default;
     }
 
-    public Binding(String path)
+    public Binding(string path)
         : this()
     {
         Path = path;
@@ -55,7 +61,7 @@ public sealed class Binding : MarkupExtension
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
         var targetPropertyType = GetPropertyType(serviceProvider);
-        var typeResolver = (IXamlTypeResolver)serviceProvider.GetService(typeof(IXamlTypeResolver));
+        var typeResolver = (IXamlTypeResolver)serviceProvider.GetService(typeof(IXamlTypeResolver))!;
         var typeDescriptor = serviceProvider as ITypeDescriptorContext;
 
         var normalizedPath = NormalizePath(Path);
@@ -102,7 +108,7 @@ public sealed class Binding : MarkupExtension
             {
                 pathValue = string.Format("({0})", pathValue);  // need to use brackets for Static property recognition in standart binding
             }
-            var resPath = (PropertyPath)new PropertyPathConverter().ConvertFromString(typeDescriptor, pathValue);
+            var resPath = (PropertyPath)new PropertyPathConverter().ConvertFromString(typeDescriptor, pathValue)!;
             binding.Path = resPath;
 
             if (Source != null)
@@ -165,7 +171,7 @@ public sealed class Binding : MarkupExtension
                     pathValue = string.Format("({0})", pathValue);  // need to use brackets for Static property recognition in standart binding
                 }
 
-                var resPath = (PropertyPath)new PropertyPathConverter().ConvertFromString(typeDescriptor, pathValue);
+                var resPath = (PropertyPath)new PropertyPathConverter().ConvertFromString(typeDescriptor, pathValue)!;
 
                 binding.Path = resPath;
 
@@ -200,11 +206,11 @@ public sealed class Binding : MarkupExtension
     {
         //provider of target object and it's property
         var targetProvider = (IProvideValueTarget)serviceProvider
-            .GetService(typeof(IProvideValueTarget));
+            .GetService(typeof(IProvideValueTarget))!;
 
-        if (targetProvider.TargetProperty is DependencyProperty)
+        if (targetProvider.TargetProperty is DependencyProperty property)
         {
-            return ((DependencyProperty)targetProvider.TargetProperty).PropertyType;
+            return property.PropertyType;
         }
 
         return targetProvider.TargetProperty.GetType();
@@ -224,12 +230,12 @@ public sealed class Binding : MarkupExtension
         var passedProps = new Dictionary<PathTokenId, string>();
         var enumNames = new Dictionary<PathTokenId, string>();
 
-        enumParameters = new Dictionary<string, Type>();
+        enumParameters = [];
 
         while (sourceIndex < path.Length)
         {
             var replaced = false;
-            for (int index = 0; index < properties.Count(); index++)
+            for (int index = 0; index < properties.Count; index++)
             {
                 var propGroup = properties[index];
                 var propId = propGroup.PathId;
@@ -241,14 +247,14 @@ public sealed class Binding : MarkupExtension
 
                     if (propId.PathType == PathTokenType.Property || propId.PathType == PathTokenType.StaticProperty)
                     {
-                        string replace = null;
+                        string replace = null!;
                         if (passedProps.ContainsKey(propId))
                         {
                             replace = passedProps[propId];
                         }
                         else
                         {
-                            replace = (passedProps.Count).ToString("{0}");
+                            replace = passedProps.Count.ToString("{0}");
                             passedProps.Add(propId, replace);
                         }
 
@@ -260,7 +266,7 @@ public sealed class Binding : MarkupExtension
                     {
                         var enumPath = propGroup.Pathes.First() as EnumToken;
 
-                        string enumTypeName = null;
+                        string enumTypeName = null!;
                         if (enumNames.ContainsKey(propId))
                         {
                             enumTypeName = enumNames[propId];
@@ -269,10 +275,10 @@ public sealed class Binding : MarkupExtension
                         {
                             enumTypeName = GetEnumName(enumNames.Count);
                             enumNames.Add(propId, enumTypeName);
-                            enumParameters.Add(enumTypeName, enumPath.Enum);
+                            enumParameters.Add(enumTypeName, enumPath!.Enum);
                         }
 
-                        var replace = string.Join(".", enumTypeName, enumPath.EnumMember);
+                        var replace = string.Join(".", enumTypeName, enumPath!.EnumMember);
 
                         result += replace;
                         sourceIndex += propPath.Length;
@@ -310,7 +316,7 @@ public sealed class Binding : MarkupExtension
 
         var pathes = propertyPathAnalyzer.GetPathes(normPath, typeResolver);
 
-        var propertiesGroups = pathes.GroupBy(p => p.Id).Select(p => new PathAppearances(p.Key, p.ToList())).ToList();
+        var propertiesGroups = pathes.GroupBy(p => p.Id).Select(p => new PathAppearances(p.Key, [.. p])).ToList();
 
         return propertiesGroups;
     }
@@ -554,18 +560,12 @@ public sealed class Binding : MarkupExtension
 
     #endregion Binding Properties
 
-    private static Lazy<IExpressionParser> _parser = new Lazy<IExpressionParser>(() => new ParserFactory().CreateCachedParser());
+    private static Lazy<IExpressionParser> _parser = new(() => new ParserFactory().CreateCachedParser());
 
-    class PathAppearances
+    class PathAppearances(PathTokenId id, List<PathToken> pathes)
     {
-        public PathTokenId PathId { get; private set; }
+        public PathTokenId PathId { get; private set; } = id;
 
-        public IEnumerable<PathToken> Pathes { get; private set; }
-
-        public PathAppearances(PathTokenId id, List<PathToken> pathes)
-        {
-            PathId = id;
-            Pathes = pathes;
-        }
+        public IEnumerable<PathToken> Pathes { get; private set; } = pathes;
     }
 }

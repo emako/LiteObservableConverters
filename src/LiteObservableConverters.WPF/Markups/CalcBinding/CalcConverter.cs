@@ -12,6 +12,11 @@ using Expression = System.Linq.Expressions.Expression;
 
 namespace LiteObservableConverters.CalcBinding;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1822
+#pragma warning disable CA1860
+#pragma warning disable CS8618
+
 /// <summary>
 /// Converter that supports expression evaluate
 /// </summary>
@@ -40,15 +45,15 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return Convert(new[] { value }, targetType, parameter, culture);
+        return Convert([value], targetType, parameter, culture);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (_compiledExpression == null)
         {
-            if ((_compiledExpression = CompileExpression(null, (string)parameter, true, new List<Type> { targetType })) == null)
-                return null;
+            if ((_compiledExpression = CompileExpression(null!, (string)parameter, true, [targetType])) == null)
+                return null!;
         }
 
         if (_compiledInversedExpression == null)
@@ -72,10 +77,10 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
             {
                 if (targetType == typeof(bool) && value.GetType() == typeof(Visibility))
                     value = new BoolToVisibilityConverter(FalseToVisibility)
-                        .ConvertBack(value, targetType, null, culture);
+                        .ConvertBack(value, targetType, null!, culture);
 
-                if (value is string && _compiledExpression.Expression.Type != value.GetType())
-                    value = ParseStringToObject((string)value, _compiledExpression.Expression.Type);
+                if (value is string v && _compiledExpression.Expression.Type != value.GetType())
+                    value = ParseStringToObject(v, _compiledExpression.Expression.Type);
 
                 var source = _compiledInversedExpression.Invoke(value);
                 return source;
@@ -85,7 +90,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
                 Tracer.TraceError("Can't invoke back expression " + parameter + ": " + e.Message);
             }
         }
-        return null;
+        return null!;
     }
 
     private object ParseStringToObject(string value, Type type)
@@ -101,7 +106,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values == null)
-            return null;
+            return null!;
 
         if (_sourceValuesTypes == null)
         {
@@ -115,8 +120,8 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
             {
                 _sourceValuesTypes = currentValuesTypes;
 
-                _compiledExpression = null;
-                _compiledInversedExpression = null;
+                _compiledExpression = null!;
+                _compiledInversedExpression = null!;
             }
         }
 
@@ -134,9 +139,9 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
             {
                 if (targetType == typeof(Visibility))
                 {
-                    if (!(result is Visibility))
+                    if (result is not Visibility)
                         result = new BoolToVisibilityConverter(FalseToVisibility)
-                                    .Convert(result, targetType, null, culture);
+                                    .Convert(result, targetType, null!, culture);
                 }
 
                 if (targetType == typeof(String))
@@ -147,20 +152,20 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
         catch (Exception e)
         {
             Tracer.TraceError("Can't invoke expression " + _compiledExpression.ExpressionText + ": " + e.Message);
-            return null;
+            return null!;
         }
     }
 
     private Type[] GetTypes(object[] values)
     {
-        return values.Select(v => v != null ? v.GetType() : null).ToArray();
+        return values.Select(static v => v?.GetType()).ToArray()!;
     }
 
-    private Lambda CompileExpression(Object[] values, string expressionTemplate, bool convertBack = false, List<Type> targetTypes = null)
+    private Lambda CompileExpression(object[] values, string expressionTemplate, bool convertBack = false, List<Type> targetTypes = null!)
     {
         try
         {
-            Lambda res = null;
+            Lambda res = null!;
 
             var needCompile = false;
             // we can't determine value type if value is null
@@ -179,7 +184,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
 
             if (needCompile)
             {
-                var argumentsTypes = convertBack ? targetTypes : _sourceValuesTypes.Select(t => t ?? typeof(Object)).ToList();
+                var argumentsTypes = convertBack ? targetTypes : [.. _sourceValuesTypes.Select(t => t ?? typeof(object))];
                 res = CompileExpression(argumentsTypes, expressionTemplate);
             }
 
@@ -188,7 +193,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
         catch (Exception e)
         {
             Tracer.TraceError("Can't convert expression " + expressionTemplate + ": " + e.Message);
-            return null;
+            return null!;
         }
     }
 
@@ -196,7 +201,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
     {
         var parametersDefinition = new List<Parameter>();
 
-        for (int i = 0; i < argumentsTypes.Count(); i++)
+        for (int i = 0; i < argumentsTypes.Count; i++)
         {
             var paramName = GetVariableName(i);
 
@@ -204,7 +209,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
             parametersDefinition.Add(new Parameter(paramName, argumentsTypes[i]));
         }
 
-        var compiledExpression = _parser.Parse(expressionTemplate, parametersDefinition.ToArray());
+        var compiledExpression = _parser.Parse(expressionTemplate, [.. parametersDefinition]);
 
         return compiledExpression;
     }
@@ -217,7 +222,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
     private string GetVariableName(int i)
     {
         //p1 p2 etc
-        return String.Format("p{0}", ++i);
+        return string.Format("p{0}", ++i);
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -227,10 +232,10 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
 
     #endregion IMultiValueConverter
 
-    private IExpressionParser _parser;
+    private readonly IExpressionParser _parser;
     private readonly object _fallbackValue;
     private Lambda _compiledExpression;
     private Lambda _compiledInversedExpression;
     private Type[] _sourceValuesTypes;
-    private static readonly Tracer Tracer = new Tracer(TraceComponent.CalcConverter);
+    private static readonly Tracer Tracer = new(TraceComponent.CalcConverter);
 }

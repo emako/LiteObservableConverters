@@ -6,6 +6,10 @@ using LiteObservableConverters.DynamicExpresso.Reflection;
 
 namespace LiteObservableConverters.DynamicExpresso;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable IDE0016
+#pragma warning disable CA1510
+
 public class Identifier
 {
     public Expression Expression { get; private set; }
@@ -14,10 +18,10 @@ public class Identifier
     public Identifier(string name, Expression expression)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentNullException("name");
+            throw new ArgumentNullException(nameof(name));
 
         if (expression == null)
-            throw new ArgumentNullException("expression");
+            throw new ArgumentNullException(nameof(expression));
 
         Expression = expression;
         Name = name;
@@ -42,44 +46,39 @@ internal class FunctionIdentifier : Identifier
 /// </summary>
 internal class MethodGroupExpression : Expression
 {
-    public class Overload
+    public class Overload(Delegate @delegate)
     {
-        public Delegate Delegate { get; }
-
-        private MethodBase _method;
+        public Delegate Delegate { get; } = @delegate;
 
         public MethodBase Method
         {
             get
             {
-                if (_method == null)
-                    _method = Delegate.Method;
+                if (field == null)
+                    field = Delegate.Method;
 
-                return _method;
+                return field;
             }
+
+            private set;
         }
 
         // we'll most likely never need this: it was needed before https://github.com/dotnet/roslyn/pull/53402
-        private MethodBase _invokeMethod;
-
         public MethodBase InvokeMethod
         {
             get
             {
-                if (_invokeMethod == null)
-                    _invokeMethod = MemberFinder.FindInvokeMethod(Delegate.GetType());
+                if (field == null)
+                    field = MemberFinder.FindInvokeMethod(Delegate.GetType());
 
-                return _invokeMethod;
+                return field;
             }
-        }
 
-        public Overload(Delegate @delegate)
-        {
-            Delegate = @delegate;
+            private set;
         }
     }
 
-    private readonly List<Overload> _overloads = new List<Overload>();
+    private readonly List<Overload> _overloads = [];
 
     internal IReadOnlyCollection<Overload> Overloads
     {

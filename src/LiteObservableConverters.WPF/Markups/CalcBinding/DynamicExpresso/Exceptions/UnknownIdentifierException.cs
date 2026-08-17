@@ -13,15 +13,16 @@ public class UnknownIdentifierException : ParseException
         Identifier = identifier;
     }
 
-    public string Identifier { get; private set; }
+    public string Identifier { get; private set; } = null!;
 
-    protected UnknownIdentifierException(
-        SerializationInfo info,
-        StreamingContext context)
-        : base(info, context)
+    protected UnknownIdentifierException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
-        Identifier = info.GetString("Identifier");
+        Identifier = info.GetString("Identifier")!;
     }
+
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CS0672 // Member overrides obsolete member
+#pragma warning disable SYSLIB0051 // Type or member is obsolete
 
     public override void GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -29,4 +30,8 @@ public class UnknownIdentifierException : ParseException
 
         base.GetObjectData(info, context);
     }
+
+#pragma warning restore SYSLIB0051 // Type or member is obsolete
+#pragma warning restore CS0672 // Member overrides obsolete member
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 }

@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace LiteObservableConverters.CalcBinding.Trace;
 
-public sealed class Tracer
+public sealed class Tracer(TraceComponent component)
 {
     static Tracer()
     {
@@ -11,11 +11,6 @@ public sealed class Tracer
         {
             Switch = _sourceSwitch
         };
-    }
-
-    public Tracer(TraceComponent component)
-    {
-        _componentName = component.ToString();
     }
 
     [Conditional("DEBUG")]
@@ -44,7 +39,7 @@ public sealed class Tracer
         }
     }
 
-    private readonly string _componentName;
+    private readonly string _componentName = component.ToString();
     private static readonly SourceSwitch _sourceSwitch;
     private static readonly TraceSource _traceSource;
 }

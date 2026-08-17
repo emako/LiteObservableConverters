@@ -6,6 +6,12 @@ using System.Windows.Markup;
 
 namespace LiteObservableConverters.CalcBinding.PathAnalysis;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable CA1829 // Use Length/Count property instead of Count() when available
+#pragma warning disable CA1860
+#pragma warning disable CS8618
+
 /// <summary>
 /// Idea of parser: to detect right all entries of property pathes, static property pathes etc. without parsing language structures
 /// For full validation of expression there need to write own analizer of C# lanquage whick could determine xaml names too...
@@ -44,7 +50,7 @@ public class PropertyPathAnalyzer
 
     static PropertyPathAnalyzer()
     {
-        delimiters = KnownDelimiters.Concat(UnknownDelimiters).Concat(QuoteTerminals).ToArray();
+        delimiters = [.. KnownDelimiters, .. UnknownDelimiters, .. QuoteTerminals];
     }
 
     #endregion Static constructor
@@ -157,7 +163,7 @@ public class PropertyPathAnalyzer
             {
                 if (GetPropChain(SubStr(str, colonPos + 1, str.Length - 1), out List<string> propChain))
                 {
-                    if (propChain.Count() > 1)
+                    if (propChain.Count > 1)
                     {
                         pathToken = GetEnumOrStaticProperty(chunk, left, propChain);
                         return true;
@@ -211,23 +217,15 @@ public class PropertyPathAnalyzer
 
     private PathToken GetPropPathOrMath(Chunk chunk, List<string> propChain)
     {
-        PathToken pathToken = null!;
-
-        if (propChain.Count() == 2 && propChain[0] == "Math")
-        {
-            pathToken = new MathToken(chunk.Start, chunk.End, propChain[1]);
-        }
-        else
-        {
-            pathToken = new PropertyPathToken(chunk.Start, chunk.End, propChain);
-        }
-
+        PathToken pathToken = propChain.Count() == 2 && propChain[0] == "Math"
+            ? new MathToken(chunk.Start, chunk.End, propChain[1])
+            : new PropertyPathToken(chunk.Start, chunk.End, propChain);
         return pathToken;
     }
 
     private PathToken GetEnumOrStaticProperty(Chunk chunk, string @namespace, List<string> identifierChain)
     {
-        PathToken pathToken = null!;
+        PathToken pathToken;
         Type enumType;
         var className = identifierChain[0];
         string fullClassName = string.Format("{0}:{1}", @namespace, className);

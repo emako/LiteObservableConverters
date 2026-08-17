@@ -24,7 +24,7 @@ internal static class TypeUtils
     /// </summary>
     public static bool TryGetNonNullableType(Type type, out Type nonNullableType)
     {
-        nonNullableType = Nullable.GetUnderlyingType(type);
+        nonNullableType = Nullable.GetUnderlyingType(type)!;
         return nonNullableType != null;
     }
 
@@ -68,29 +68,13 @@ internal static class TypeUtils
     {
         type = GetNonNullableType(type);
         if (type.IsEnum) return 0;
-        switch (Type.GetTypeCode(type))
+        return Type.GetTypeCode(type) switch
         {
-            case TypeCode.Char:
-            case TypeCode.Single:
-            case TypeCode.Double:
-            case TypeCode.Decimal:
-                return 1;
-
-            case TypeCode.SByte:
-            case TypeCode.Int16:
-            case TypeCode.Int32:
-            case TypeCode.Int64:
-                return 2;
-
-            case TypeCode.Byte:
-            case TypeCode.UInt16:
-            case TypeCode.UInt32:
-            case TypeCode.UInt64:
-                return 3;
-
-            default:
-                return 0;
-        }
+            TypeCode.Char or TypeCode.Single or TypeCode.Double or TypeCode.Decimal => 1,
+            TypeCode.SByte or TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64 => 2,
+            TypeCode.Byte or TypeCode.UInt16 or TypeCode.UInt32 or TypeCode.UInt64 => 3,
+            _ => 0,
+        };
     }
 
     public static bool IsCompatibleWith(Type source, Type target)
@@ -273,7 +257,7 @@ internal static class TypeUtils
     {
         if (t == null || t.IsArray)
         {
-            return null;
+            return null!;
         }
         return t;
     }
@@ -299,14 +283,14 @@ internal static class TypeUtils
             var givenTypeGenericsArgs = givenType.GenericTypeArguments;
             var constructedGenericsArgs = constructedGenericType.GenericTypeArguments;
             if (givenTypeGenericsArgs.Zip(constructedGenericsArgs, (g, c) => TypeUtils.IsCompatibleWith(g, c)).Any(compatible => !compatible))
-                return null;
+                return null!;
 
             return givenType;
         }
 
         var baseType = givenType.BaseType;
         if (baseType == null)
-            return null;
+            return null!;
 
         return FindAssignableGenericType(baseType, genericTypeDefinition);
     }

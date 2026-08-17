@@ -15,7 +15,7 @@ internal static class ExpressionUtils
         if (expr is ConstantExpression ce && ce == ParserConstants.NullLiteralExpression)
         {
             if (type.ContainsGenericParameters)
-                return null;
+                return null!;
             if (!type.IsValueType || TypeUtils.IsNullableType(type))
                 return Expression.Constant(null, type);
         }
@@ -23,7 +23,7 @@ internal static class ExpressionUtils
         if (expr is InterpreterExpression ie)
         {
             if (!ie.IsCompatibleWithDelegate(type))
-                return null;
+                return null!;
 
             if (!type.ContainsGenericParameters)
                 return ie.EvalAs(type);
@@ -48,6 +48,6 @@ internal static class ExpressionUtils
             return Expression.Convert(expr, type);
         }
 
-        return null;
+        return null!;
     }
 }

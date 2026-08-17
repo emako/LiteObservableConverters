@@ -3,15 +3,21 @@ using System.Linq.Expressions;
 
 namespace LiteObservableConverters.DynamicExpresso;
 
+#pragma warning disable IDE0011
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable IDE0056 // Use index operator
+#pragma warning disable CA1510
+
 /// <summary>
 /// An expression parameter. This class is thread safe.
 /// </summary>
 public class Parameter
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 {
     public Parameter(string name, object value)
     {
         if (value == null)
-            throw new ArgumentNullException("value");
+            throw new ArgumentNullException(nameof(value));
 
         Name = name;
         Type = value.GetType();
@@ -22,14 +28,14 @@ public class Parameter
 
     public Parameter(ParameterExpression parameterExpression)
     {
-        Name = parameterExpression.Name;
+        Name = parameterExpression.Name!;
         Type = parameterExpression.Type;
-        Value = null;
+        Value = null!;
 
         Expression = parameterExpression;
     }
 
-    public Parameter(string name, Type type, object value = null)
+    public Parameter(string name, Type type, object value = null!)
     {
         Name = name;
         Type = type;
@@ -40,7 +46,7 @@ public class Parameter
 
     public static Parameter Create<T>(string name, T value)
     {
-        return new Parameter(name, typeof(T), value);
+        return new Parameter(name, typeof(T), value!);
     }
 
     public string Name { get; private set; }
@@ -53,13 +59,7 @@ public class Parameter
 /// <summary>
 /// Parameter with its position in the expression.
 /// </summary>
-internal class ParameterWithPosition : Parameter
+internal class ParameterWithPosition(int pos, string name, Type type) : Parameter(name, type)
 {
-    public ParameterWithPosition(int pos, string name, Type type)
-        : base(name, type)
-    {
-        Position = pos;
-    }
-
-    public int Position { get; }
+    public int Position { get; } = pos;
 }

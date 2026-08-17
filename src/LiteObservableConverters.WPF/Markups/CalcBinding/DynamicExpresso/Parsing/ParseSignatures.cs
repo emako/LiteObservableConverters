@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using LiteObservableConverters.DynamicExpresso.Reflection;
 
@@ -36,17 +35,17 @@ internal static class ParseSignatures
     /// <summary>
     /// Signatures for the binary logical operators.
     /// </summary>
-    public static MethodBase[] LogicalSignatures = MakeBinarySignatures(new[]
-    {
+    public static MethodBase[] LogicalSignatures = MakeBinarySignatures(
+    [
         (typeof(bool),  typeof(bool) ),
         (typeof(bool?), typeof(bool?)),
-    });
+    ]);
 
     /// <summary>
     /// Signatures for the binary arithmetic operators.
     /// </summary>
-    public static MethodBase[] ArithmeticSignatures = MakeBinarySignatures(new[]
-    {
+    public static MethodBase[] ArithmeticSignatures = MakeBinarySignatures(
+    [
         (typeof(int),      typeof(int)     ),
         (typeof(uint),     typeof(uint)    ),
         (typeof(long),     typeof(long)    ),
@@ -61,46 +60,58 @@ internal static class ParseSignatures
         (typeof(float?),   typeof(float?)  ),
         (typeof(double?),  typeof(double?) ),
         (typeof(decimal?), typeof(decimal?)),
-    });
+    ]);
 
     /// <summary>
     /// Signatures for the binary relational operators.
     /// </summary>
-    public static MethodBase[] RelationalSignatures = ArithmeticSignatures.Concat(MakeBinarySignatures(new[]
-    {
-        (typeof(string),    typeof(string)   ),
-        (typeof(char),      typeof(char)     ),
-        (typeof(DateTime),  typeof(DateTime) ),
-        (typeof(TimeSpan),  typeof(TimeSpan) ),
-        (typeof(char?),     typeof(char?)    ),
-        (typeof(DateTime?), typeof(DateTime?)),
-        (typeof(TimeSpan?), typeof(TimeSpan?)),
-    })).ToArray();
+    public static MethodBase[] RelationalSignatures =
+    [
+        .. ArithmeticSignatures,
+        .. MakeBinarySignatures(
+        [
+            (typeof(string),    typeof(string)   ),
+            (typeof(char),      typeof(char)     ),
+            (typeof(DateTime),  typeof(DateTime) ),
+            (typeof(TimeSpan),  typeof(TimeSpan) ),
+            (typeof(char?),     typeof(char?)    ),
+            (typeof(DateTime?), typeof(DateTime?)),
+            (typeof(TimeSpan?), typeof(TimeSpan?)),
+        ]),
+    ];
 
     /// <summary>
     /// Signatures for the binary equality operators.
     /// </summary>
-    public static MethodBase[] EqualitySignatures = RelationalSignatures.Concat(LogicalSignatures).ToArray();
+    public static MethodBase[] EqualitySignatures = [.. RelationalSignatures, .. LogicalSignatures];
 
     /// <summary>
     /// Signatures for the binary + operators.
     /// </summary>
-    public static MethodBase[] AddSignatures = ArithmeticSignatures.Concat(MakeBinarySignatures(new[]
-    {
-        (typeof(DateTime),  typeof(TimeSpan) ),
-        (typeof(TimeSpan),  typeof(TimeSpan) ),
-        (typeof(DateTime?), typeof(TimeSpan?)),
-        (typeof(TimeSpan?), typeof(TimeSpan?)),
-    })).ToArray();
+    public static MethodBase[] AddSignatures =
+    [
+        .. ArithmeticSignatures,
+        .. MakeBinarySignatures(
+        [
+            (typeof(DateTime),  typeof(TimeSpan) ),
+            (typeof(TimeSpan),  typeof(TimeSpan) ),
+            (typeof(DateTime?), typeof(TimeSpan?)),
+            (typeof(TimeSpan?), typeof(TimeSpan?)),
+        ]),
+    ];
 
     /// <summary>
     /// Signatures for the binary - operators.
     /// </summary>
-    public static MethodBase[] SubtractSignatures = AddSignatures.Concat(MakeBinarySignatures(new[]
-    {
-        (typeof(DateTime),  typeof(DateTime)),
-        (typeof(DateTime?), typeof(DateTime?)),
-    })).ToArray();
+    public static MethodBase[] SubtractSignatures =
+    [
+        .. AddSignatures,
+        .. MakeBinarySignatures(
+        [
+            (typeof(DateTime),  typeof(DateTime)),
+            (typeof(DateTime?), typeof(DateTime?)),
+        ]),
+    ];
 
     /// <summary>
     /// Signatures for the unary - operators.
@@ -126,8 +137,8 @@ internal static class ParseSignatures
     /// <summary>
     /// Signatures for the left and right shift operators.
     /// </summary>
-    public static MethodBase[] ShiftSignatures = MakeBinarySignatures(new[]
-    {
+    public static MethodBase[] ShiftSignatures = MakeBinarySignatures(
+    [
         (typeof(int),   typeof(int) ),
         (typeof(uint),  typeof(int) ),
         (typeof(long),  typeof(int) ),
@@ -136,37 +147,5 @@ internal static class ParseSignatures
         (typeof(uint?), typeof(int?) ),
         (typeof(long?), typeof(int?) ),
         (typeof(ulong?),typeof(int?) ),
-    });
-
-    //interface IEnumerableSignatures
-    //{
-    //    void Where(bool predicate);
-    //    void Any();
-    //    void Any(bool predicate);
-    //    void All(bool predicate);
-    //    void Count();
-    //    void Count(bool predicate);
-    //    void Min(object selector);
-    //    void Max(object selector);
-    //    void Sum(int selector);
-    //    void Sum(int? selector);
-    //    void Sum(long selector);
-    //    void Sum(long? selector);
-    //    void Sum(float selector);
-    //    void Sum(float? selector);
-    //    void Sum(double selector);
-    //    void Sum(double? selector);
-    //    void Sum(decimal selector);
-    //    void Sum(decimal? selector);
-    //    void Average(int selector);
-    //    void Average(int? selector);
-    //    void Average(long selector);
-    //    void Average(long? selector);
-    //    void Average(float selector);
-    //    void Average(float? selector);
-    //    void Average(double selector);
-    //    void Average(double? selector);
-    //    void Average(decimal selector);
-    //    void Average(decimal? selector);
-    //}
+    ]);
 }

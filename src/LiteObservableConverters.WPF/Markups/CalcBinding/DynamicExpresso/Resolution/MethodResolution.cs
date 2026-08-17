@@ -64,8 +64,8 @@ internal static class MethodResolution
         var promotedArgs = new List<Expression>(method.Parameters.Count);
         var declaredWorkingParameters = 0;
 
-        Type paramsArrayTypeFound = null;
-        List<Expression> paramsArrayPromotedArgument = null;
+        Type paramsArrayTypeFound = null!;
+        List<Expression> paramsArrayPromotedArgument = null!;
 
         foreach (var currentArgument in args)
         {
@@ -121,9 +121,9 @@ internal static class MethodResolution
             if (paramsArrayTypeFound != null)
             {
                 var paramsArrayElementType = paramsArrayTypeFound.GetElementType();
-                if (paramsArrayElementType.IsGenericParameter)
+                if (paramsArrayElementType!.IsGenericParameter)
                 {
-                    paramsArrayPromotedArgument = paramsArrayPromotedArgument ?? new List<Expression>();
+                    paramsArrayPromotedArgument ??= [];
                     paramsArrayPromotedArgument.Add(currentArgument);
                     continue;
                 }
@@ -131,7 +131,7 @@ internal static class MethodResolution
                 var promoted = ExpressionUtils.PromoteExpression(currentArgument, paramsArrayElementType);
                 if (promoted != null)
                 {
-                    paramsArrayPromotedArgument = paramsArrayPromotedArgument ?? new List<Expression>();
+                    paramsArrayPromotedArgument ??= [];
                     paramsArrayPromotedArgument.Add(promoted);
                     continue;
                 }
@@ -143,10 +143,8 @@ internal static class MethodResolution
         if (paramsArrayPromotedArgument != null)
         {
             method.HasParamsArray = true;
-            var paramsArrayElementType = paramsArrayTypeFound.GetElementType();
-            if (paramsArrayElementType == null)
-                throw ParseException.Create(-1, ErrorMessages.ParamsArrayTypeNotAnArray);
-
+            var paramsArrayElementType = paramsArrayTypeFound!.GetElementType()
+                ?? throw ParseException.Create(-1, ErrorMessages.ParamsArrayTypeNotAnArray);
             if (paramsArrayElementType.IsGenericParameter)
             {
                 var actualTypes = paramsArrayPromotedArgument.Select(_ => _.Type).Distinct().ToArray();
@@ -175,7 +173,7 @@ internal static class MethodResolution
             else if (ReflectionExtensions.HasParamsArrayType(parameter))
             {
                 method.HasParamsArray = true;
-                promotedArgs.Add(Expression.NewArrayInit(parameter.ParameterType.GetElementType()));
+                promotedArgs.Add(Expression.NewArrayInit(parameter.ParameterType.GetElementType()!));
             }
             else
             {
@@ -266,10 +264,10 @@ internal static class MethodResolution
             var declaringType = indexer.Indexer.DeclaringType;
             var otherDeclaringType = otherIndexer.Indexer.DeclaringType;
 
-            var isOtherIndexerIsInParentType = otherDeclaringType.IsAssignableFrom(declaringType);
+            var isOtherIndexerIsInParentType = otherDeclaringType!.IsAssignableFrom(declaringType);
             if (isOtherIndexerIsInParentType)
             {
-                var isIndexerIsInDescendantType = !declaringType.IsAssignableFrom(otherDeclaringType);
+                var isIndexerIsInDescendantType = !declaringType!.IsAssignableFrom(otherDeclaringType);
                 return isIndexerIsInDescendantType;
             }
         }
@@ -281,14 +279,14 @@ internal static class MethodResolution
     {
         var methodInfo = (MethodInfo)method.MethodBase;
         var actualGenericArgs = ExtractActualGenericArguments(
-            method.Parameters.Select(p => p.ParameterType).ToArray(),
-            method.PromotedParameters.Select(p => p.Type).ToArray());
+            [.. method.Parameters.Select(p => p.ParameterType)],
+            [.. method.PromotedParameters.Select(p => p.Type)]);
 
         var genericArgs = methodInfo.GetGenericArguments()
             .Select(p => actualGenericArgs.TryGetValue(p.Name, out var typ) ? typ : typeof(object))
             .ToArray();
 
-        MethodInfo genericMethod = null;
+        MethodInfo genericMethod = null!;
         try
         {
             genericMethod = methodInfo.MakeGenericMethod(genericArgs);
@@ -296,7 +294,7 @@ internal static class MethodResolution
         catch (ArgumentException e) when (e.InnerException is VerificationException)
         {
             // this exception is thrown when a generic argument violates the generic constraints
-            return null;
+            return null!;
         }
 
         return genericMethod;
@@ -321,9 +319,8 @@ internal static class MethodResolution
             else if (requestedType.IsArray && actualType.IsArray)
             {
                 var innerGenericTypes = ExtractActualGenericArguments(
-                    new[] { requestedType.GetElementType() },
-                    new[] { actualType.GetElementType()
-                });
+                    [requestedType.GetElementType()!],
+                    [actualType.GetElementType()!]);
 
                 foreach (var innerGenericType in innerGenericTypes)
                     extractedGenericTypes[innerGenericType.Key] = innerGenericType.Value;

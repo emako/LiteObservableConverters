@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace LiteObservableConverters.CalcBinding.Inversion;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CS8714
+
 /// <summary>
 /// Two keys dictionary
 /// </summary>
@@ -13,7 +16,7 @@ internal class Dictionary<TKey1, TKey2, TValue> : Dictionary<TKey1, Dictionary<T
     public void Add(TKey1 key1, TKey2 key2, TValue value)
     {
         if (!ContainsKey(key1))
-            Add(key1, new Dictionary<TKey2, TValue>());
+            Add(key1, []);
 
         this[key1].Add(key2, value);
     }

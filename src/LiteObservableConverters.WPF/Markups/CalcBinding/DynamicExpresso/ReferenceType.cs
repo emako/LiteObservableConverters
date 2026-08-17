@@ -7,6 +7,11 @@ using LiteObservableConverters.DynamicExpresso.Resources;
 
 namespace LiteObservableConverters.DynamicExpresso;
 
+#pragma warning disable IDE0016
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable IDE0056 // Use index operator
+#pragma warning disable CA1510
+
 public class ReferenceType
 {
     public Type Type { get; private set; }
@@ -36,7 +41,7 @@ public class ReferenceType
 
         Type = type;
         Name = name;
-        ExtensionMethods = ReflectionExtensions.GetExtensionMethods(type).ToList();
+        ExtensionMethods = [.. ReflectionExtensions.GetExtensionMethods(type)];
     }
 
     public ReferenceType(Type type)
@@ -46,6 +51,6 @@ public class ReferenceType
 
         Type = type;
         Name = type.Name;
-        ExtensionMethods = ReflectionExtensions.GetExtensionMethods(type).ToList();
+        ExtensionMethods = [.. ReflectionExtensions.GetExtensionMethods(type)];
     }
 }

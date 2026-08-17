@@ -5,13 +5,14 @@ using System.Linq;
 
 namespace LiteObservableConverters.CalcBinding.ExpressionParsers;
 
-public sealed class CachedExpressionParser : IExpressionParser
-{
-    public CachedExpressionParser(IExpressionParser innerParser)
-    {
-        _innerParser = innerParser;
-    }
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1067 // Override Object.Equals(object) when implementing IEquatable<T>
+#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
 
+public sealed class CachedExpressionParser(IExpressionParser innerParser) : IExpressionParser
+#pragma warning restore IDE0079 // Remove unnecessary suppression
+{
     public Lambda Parse(string expressionText, Parameter[] parameters)
     {
         var expressionKey = new ExpressionKey(expressionText, parameters);
@@ -20,7 +21,7 @@ public sealed class CachedExpressionParser : IExpressionParser
         if (cachedLambda != null)
             return cachedLambda;
 
-        var lambda = _innerParser.Parse(expressionText, parameters);
+        var lambda = innerParser.Parse(expressionText, parameters);
         SaveInCache(expressionKey, lambda);
 
         return lambda;
@@ -37,8 +38,7 @@ public sealed class CachedExpressionParser : IExpressionParser
         {
             var expressionRef = _cachedExpressions[expressionKey];
 
-            Lambda lambda = expressionRef.Target as Lambda;
-            if (lambda != null)
+            if (expressionRef.Target is Lambda lambda)
             {
                 return lambda;
             }
@@ -49,7 +49,7 @@ public sealed class CachedExpressionParser : IExpressionParser
             }
         }
 
-        return null;
+        return null!;
     }
 
     private void RemoveDeadExpressions()
@@ -63,35 +63,28 @@ public sealed class CachedExpressionParser : IExpressionParser
 
     public void SetReference(IEnumerable<ReferenceType> referencedTypes)
     {
-        _innerParser.SetReference(referencedTypes);
+        innerParser.SetReference(referencedTypes);
     }
 
-    private Dictionary<ExpressionKey, WeakReference> _cachedExpressions = new Dictionary<ExpressionKey, WeakReference>();
-    private IExpressionParser _innerParser;
+    private readonly Dictionary<ExpressionKey, WeakReference> _cachedExpressions = [];
 
-    private struct ExpressionKey : IEquatable<ExpressionKey>
+    private readonly struct ExpressionKey(string expressionText, Parameter[] parameters) : IEquatable<ExpressionKey>
     {
-        private readonly string _expressionText;
-        private readonly Parameter[] _parameters;
+        private readonly string _expressionText = expressionText;
+        private readonly Parameter[] _parameters = parameters;
 
-        public ExpressionKey(string expressionText, Parameter[] parameters)
-        {
-            _expressionText = expressionText;
-            _parameters = parameters;
-        }
-
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return (_expressionText.GetHashCode() * 397) ^ (_parameters.Length);
         }
 
-        public bool Equals(ExpressionKey other)
+        public readonly bool Equals(ExpressionKey other)
         {
             return string.Equals(_expressionText, other._expressionText)
                 && _parameters.SequenceEqual(other._parameters, _parameterComparer);
         }
 
-        private static ParameterComparer _parameterComparer = new ParameterComparer();
+        private static readonly ParameterComparer _parameterComparer = new();
     }
 
     private class ParameterComparer : IEqualityComparer<Parameter>

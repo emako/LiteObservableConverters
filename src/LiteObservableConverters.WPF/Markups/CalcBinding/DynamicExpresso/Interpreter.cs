@@ -10,11 +10,18 @@ using LiteObservableConverters.DynamicExpresso.Visitors;
 
 namespace LiteObservableConverters.DynamicExpresso;
 
+#pragma warning disable IDE0011
+#pragma warning disable IDE0032
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1510
+#pragma warning disable CA1859
+
 /// <summary>
 /// Class used to parse and compile a text expression into an Expression or a Delegate that can be invoked. Expression are written using a subset of C# syntax.
 /// Only get properties, Parse and Eval methods are thread safe.
 /// </summary>
 public class Interpreter
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 {
     private readonly ParserSettings _settings;
     private readonly ISet<ExpressionVisitor> _visitors = new HashSet<ExpressionVisitor>();
@@ -92,9 +99,7 @@ public class Interpreter
     {
         get
         {
-            return _settings.KnownTypes
-                .Select(p => p.Value)
-                .ToList();
+            return [.. _settings.KnownTypes.Select(p => p.Value)];
         }
     }
 
@@ -105,19 +110,14 @@ public class Interpreter
     {
         get
         {
-            return _settings.Identifiers
-                .Select(p => p.Value)
-                .ToList();
+            return [.. _settings.Identifiers.Select(p => p.Value)];
         }
     }
 
     /// <summary>
     /// Gets the available assignment operators.
     /// </summary>
-    public AssignmentOperators AssignmentOperators
-    {
-        get { return _settings.AssignmentOperators; }
-    }
+    public AssignmentOperators AssignmentOperators => _settings.AssignmentOperators;
 
     #endregion Properties
 
@@ -151,10 +151,7 @@ public class Interpreter
 
     #region Visitors
 
-    public ISet<ExpressionVisitor> Visitors
-    {
-        get { return _visitors; }
-    }
+    public ISet<ExpressionVisitor> Visitors => _visitors;
 
     /// <summary>
     /// Enable reflection expression (like x.GetType().GetMethod() or typeof(double).Assembly) by removing the DisableReflectionVisitor.
@@ -221,7 +218,7 @@ public class Interpreter
     /// <returns></returns>
     public Interpreter SetVariable<T>(string name, T value)
     {
-        return SetVariable(name, value, typeof(T));
+        return SetVariable(name, value!, typeof(T));
     }
 
     /// <summary>

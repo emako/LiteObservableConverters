@@ -9,13 +9,17 @@ using LiteObservableConverters.DynamicExpresso.Parsing;
 
 namespace LiteObservableConverters.DynamicExpresso;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable IDE0056 // Use index operator
+#pragma warning disable CA1510
+
 internal class ParserArguments
 {
     private readonly Dictionary<string, Parameter> _declaredParameters;
 
-    private readonly HashSet<Parameter> _usedParameters = new HashSet<Parameter>();
-    private readonly HashSet<ReferenceType> _usedTypes = new HashSet<ReferenceType>();
-    private readonly HashSet<Identifier> _usedIdentifiers = new HashSet<Identifier>();
+    private readonly HashSet<Parameter> _usedParameters = [];
+    private readonly HashSet<ReferenceType> _usedTypes = [];
+    private readonly HashSet<Identifier> _usedIdentifiers = [];
 
     public ParserArguments(
         string expressionText,
@@ -28,7 +32,7 @@ internal class ParserArguments
         ExpressionReturnType = expressionReturnType;
 
         Settings = settings;
-        _declaredParameters = new Dictionary<string, Parameter>(settings.KeyComparer);
+        _declaredParameters = [with(settings.KeyComparer)];
         foreach (var pe in declaredParameters)
         {
             try
@@ -45,6 +49,7 @@ internal class ParserArguments
     public ParserSettings Settings { get; private set; }
     public string ExpressionText { get; private set; }
     public Type ExpressionReturnType { get; private set; }
+
     public IEnumerable<Parameter> DeclaredParameters
     { get { return _declaredParameters.Values; } }
 
@@ -72,7 +77,7 @@ internal class ParserArguments
             return true;
         }
 
-        type = null;
+        type = null!;
         return false;
     }
 
@@ -94,7 +99,7 @@ internal class ParserArguments
             return true;
         }
 
-        expression = null;
+        expression = null!;
         return false;
     }
 
@@ -110,7 +115,7 @@ internal class ParserArguments
             return true;
         }
 
-        expression = null;
+        expression = null!;
         return false;
     }
 

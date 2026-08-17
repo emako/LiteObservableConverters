@@ -20,5 +20,5 @@ public sealed class ExpressionParser : IExpressionParser
         _interpreter.Reference(referencedTypes);
     }
 
-    private Interpreter _interpreter;
+    private readonly Interpreter _interpreter;
 }

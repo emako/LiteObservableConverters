@@ -1,24 +1,19 @@
 namespace LiteObservableConverters.CalcBinding.PathAnalysis;
 
-public class PathTokenId
-{
-    public PathTokenType PathType { get; private set; }
-    public string Value { get; private set; }
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CS8765
 
-    public PathTokenId(PathTokenType pathType, string value)
-    {
-        PathType = pathType;
-        Value = value;
-    }
+public class PathTokenId(PathTokenType pathType, string value)
+{
+    public PathTokenType PathType { get; private set; } = pathType;
+    public string Value { get; private set; } = value;
 
     public override bool Equals(object obj)
     {
         if (obj == null)
             return false;
 
-        var o = obj as PathTokenId;
-
-        if (o == null)
+        if (obj is not PathTokenId o)
             return false;
 
         return (o.PathType == PathType && o.Value == Value);

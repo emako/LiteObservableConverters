@@ -20,11 +20,11 @@ internal class ParserSettings
 
         KeyComparison = CaseInsensitive ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
 
-        _identifiers = new Dictionary<string, Identifier>(KeyComparer);
+        _identifiers = [with(KeyComparer)];
 
-        _knownTypes = new Dictionary<string, ReferenceType>(KeyComparer);
+        _knownTypes = [with(KeyComparer)];
 
-        _extensionMethods = new HashSet<MethodInfo>();
+        _extensionMethods = [];
 
         AssignmentOperators = AssignmentOperators.All;
 
@@ -37,7 +37,7 @@ internal class ParserSettings
     {
         _knownTypes = new Dictionary<string, ReferenceType>(other._knownTypes, other._knownTypes.Comparer);
         _identifiers = new Dictionary<string, Identifier>(other._identifiers, other._identifiers.Comparer);
-        _extensionMethods = new HashSet<MethodInfo>(other._extensionMethods);
+        _extensionMethods = [.. other._extensionMethods];
 
         AssignmentOperators = other.AssignmentOperators;
         DefaultNumberType = other.DefaultNumberType;
@@ -53,56 +53,23 @@ internal class ParserSettings
         return new ParserSettings(this);
     }
 
-    public IDictionary<string, ReferenceType> KnownTypes
-    {
-        get { return _knownTypes; }
-    }
+    public IDictionary<string, ReferenceType> KnownTypes => _knownTypes;
 
-    public IDictionary<string, Identifier> Identifiers
-    {
-        get { return _identifiers; }
-    }
+    public IDictionary<string, Identifier> Identifiers => _identifiers;
 
-    public HashSet<MethodInfo> ExtensionMethods
-    {
-        get { return _extensionMethods; }
-    }
+    public HashSet<MethodInfo> ExtensionMethods => _extensionMethods;
 
-    public bool CaseInsensitive
-    {
-        get;
-    }
+    public bool CaseInsensitive { get; }
 
-    public bool LateBindObject
-    {
-        get;
-    }
+    public bool LateBindObject { get; }
 
-    public StringComparison KeyComparison
-    {
-        get;
-    }
+    public StringComparison KeyComparison { get; }
 
-    public IEqualityComparer<string> KeyComparer
-    {
-        get;
-    }
+    public IEqualityComparer<string> KeyComparer { get; }
 
-    public DefaultNumberType DefaultNumberType
-    {
-        get;
-        set;
-    }
+    public DefaultNumberType DefaultNumberType { get; set; }
 
-    public AssignmentOperators AssignmentOperators
-    {
-        get;
-        set;
-    }
+    public AssignmentOperators AssignmentOperators { get; set; }
 
-    public bool LambdaExpressions
-    {
-        get;
-        set;
-    }
+    public bool LambdaExpressions { get; set; }
 }

@@ -6,9 +6,9 @@ namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
 internal class MethodData
 {
-    public MethodBase MethodBase;
-    public IList<ParameterInfo> Parameters;
-    public IList<Expression> PromotedParameters;
+    public MethodBase MethodBase = null!;
+    public IList<ParameterInfo> Parameters = null!;
+    public IList<Expression> PromotedParameters = null!;
     public bool HasParamsArray;
 
     public static MethodData Gen(MethodBase method)
@@ -22,6 +22,6 @@ internal class MethodData
 
     public override string ToString()
     {
-        return MethodBase.ToString();
+        return MethodBase.ToString()!;
     }
 }

@@ -7,18 +7,13 @@ using LiteObservableConverters.DynamicExpresso.Resolution;
 
 namespace LiteObservableConverters.DynamicExpresso.Reflection;
 
-internal class MemberFinder
-{
-    private readonly ParserArguments _arguments;
-    private readonly BindingFlags _bindingCase;
-    private readonly MemberFilter _memberFilterCase;
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1822
 
-    public MemberFinder(ParserArguments arguments)
-    {
-        _arguments = arguments;
-        _bindingCase = arguments.Settings.CaseInsensitive ? BindingFlags.IgnoreCase : BindingFlags.Default;
-        _memberFilterCase = arguments.Settings.CaseInsensitive ? Type.FilterNameIgnoreCase : Type.FilterName;
-    }
+internal class MemberFinder(ParserArguments arguments)
+{
+    private readonly BindingFlags _bindingCase = arguments.Settings.CaseInsensitive ? BindingFlags.IgnoreCase : BindingFlags.Default;
+    private readonly MemberFilter _memberFilterCase = arguments.Settings.CaseInsensitive ? Type.FilterNameIgnoreCase : Type.FilterName;
 
     public MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
     {
@@ -31,7 +26,7 @@ internal class MemberFinder
             if (members.Length != 0)
                 return members[0];
         }
-        return null;
+        return null!;
     }
 
     public IList<MethodData> FindMethods(Type type, string methodName, bool staticAccess, Expression[] args)
@@ -66,12 +61,12 @@ internal class MemberFinder
                 return method;
         }
 
-        return null;
+        return null!;
     }
 
     public IList<MethodData> FindExtensionMethods(string methodName, Expression[] args)
     {
-        var matchMethods = _arguments.GetExtensionMethods(methodName);
+        var matchMethods = arguments.GetExtensionMethods(methodName);
 
         return MethodResolution.FindBestMethod(matchMethods, args);
     }
@@ -115,7 +110,7 @@ internal class MemberFinder
         while (type != null)
         {
             yield return type;
-            type = type.BaseType;
+            type = type.BaseType!;
         }
     }
 

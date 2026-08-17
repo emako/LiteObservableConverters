@@ -7,12 +7,17 @@ using LiteObservableConverters.DynamicExpresso;
 
 namespace LiteObservableConverters.CalcBinding.Inversion;
 
+#pragma warning disable IDE0011
+#pragma warning disable IDE0079 // Remove unnecessary suppression
+#pragma warning disable CA1822
+#pragma warning disable CA1854
+
 /// <summary>
 /// Validate and inverse expression of one parameter
 /// </summary>
-public class Inverter
+public class Inverter(IExpressionParser interpreter)
 {
-    private static readonly ExpressionFuncsDictionary<ExpressionType> inversedFuncs = new ExpressionFuncsDictionary<ExpressionType>
+    private static readonly ExpressionFuncsDictionary<ExpressionType> inversedFuncs = new()
     {
         // res = a+c or c+a => a = res - c
         {ExpressionType.Add, ConstantPlace.Wherever, constant => RES + "-" + constant},
@@ -28,7 +33,7 @@ public class Inverter
         {ExpressionType.Divide, ConstantPlace.Right, constant => RES + "*" + constant},
     };
 
-    private static readonly ExpressionFuncsDictionary<String> inversedMathFuncs = new ExpressionFuncsDictionary<string>
+    private static readonly ExpressionFuncsDictionary<String> inversedMathFuncs = new()
     {
         // res = Math.Sin(a) => a = Math.Asin(res)
         {"Math.Sin", ConstantPlace.Wherever, dummy => "Math.Asin" + RES},
@@ -56,11 +61,6 @@ public class Inverter
         {"Math.Log", ConstantPlace.Right, constant => "Math.Pow(" + constant + ", " + RES + ")"},
     };
 
-    public Inverter(IExpressionParser interpreter)
-    {
-        this._interpreter = interpreter;
-    }
-
     /// <summary>
     /// Inverse expression of one parameter
     /// </summary>
@@ -70,11 +70,11 @@ public class Inverter
     public Lambda InverseExpression(Expression expression, ParameterExpression parameter)
     {
         var recInfo = new RecursiveInfo();
-        String dummy = null;
+        string dummy = null!;
         InverseExpressionInternal(expression, recInfo, ref dummy);
 
         if (recInfo.FoundedParamName == null)
-            throw new InverseException(String.Format("Parameter was not found in expression '{0}'!", expression));
+            throw new InverseException(string.Format("Parameter was not found in expression '{0}'!", expression));
 
         // difficult with constant subtrees: we write to string all constant subtrees,
         // but some of them can take Convert operator, which converted to string as Convert(arg).
@@ -89,9 +89,9 @@ public class Inverter
 
         var paramName = parameter.Name;
 
-        var invertedExp = String.Format(recInfo.InvertedExp, paramName);
+        var invertedExp = string.Format(recInfo.InvertedExp, paramName);
 
-        var res = _interpreter.Parse(invertedExp, new Parameter(parameter.Name, parameter.Type));
+        var res = interpreter.Parse(invertedExp, new Parameter(parameter.Name!, parameter.Type));
         Debug.WriteLine(res.ExpressionText);
         return res;
     }
@@ -114,8 +114,8 @@ public class Inverter
                 {
                     var binExp = expr as BinaryExpression;
 
-                    string leftConstant = null, rightConstant = null;
-                    var leftOperandType = InverseExpressionInternal(binExp.Left, recInfo, ref leftConstant);
+                    string leftConstant = null!, rightConstant = null!;
+                    var leftOperandType = InverseExpressionInternal(binExp!.Left, recInfo, ref leftConstant);
                     var rightOperandType = InverseExpressionInternal(binExp.Right, recInfo, ref rightConstant);
 
                     var nodeType = (leftOperandType == NodeType.Variable || rightOperandType == NodeType.Variable)
@@ -126,10 +126,10 @@ public class Inverter
                     {
                         var constantPlace = leftOperandType == NodeType.Constant ? ConstantPlace.Left : ConstantPlace.Right;
                         var constant = leftOperandType == NodeType.Constant ? leftConstant : rightConstant;
-                        recInfo.InvertedExp = String.Format(recInfo.InvertedExp, inversedFuncs[expr.NodeType, constantPlace](constant));
+                        recInfo.InvertedExp = string.Format(recInfo.InvertedExp, inversedFuncs[expr.NodeType, constantPlace](constant));
                     }
                     else
-                        constantExpression = String.Format("({0}{1}{2})", leftConstant, NodeTypeToString(binExp.NodeType), rightConstant);
+                        constantExpression = string.Format("({0}{1}{2})", leftConstant, NodeTypeToString(binExp.NodeType), rightConstant);
 
                     return nodeType;
                 }
@@ -139,74 +139,74 @@ public class Inverter
 
                     if (recInfo.FoundedParamName == null)
                     {
-                        recInfo.FoundedParamName = parameter.Name;
+                        recInfo.FoundedParamName = parameter!.Name!;
                         recInfo.InvertedExp = RES;
                         return NodeType.Variable;
                     }
 
-                    if (recInfo.FoundedParamName == parameter.Name)
-                        throw new InverseException(String.Format("Variable {0} is defined more than one time!", recInfo.FoundedParamName));
+                    if (recInfo.FoundedParamName == parameter!.Name)
+                        throw new InverseException(string.Format("Variable {0} is defined more than one time!", recInfo.FoundedParamName));
                     else
-                        throw new InverseException(String.Format("More than one variables are defined in expression: {0} and {1}", recInfo.FoundedParamName, parameter.Name));
+                        throw new InverseException(string.Format("More than one variables are defined in expression: {0} and {1}", recInfo.FoundedParamName, parameter.Name));
                 }
 
             case ExpressionType.Constant:
                 {
                     var constant = expr as ConstantExpression;
-                    constantExpression = String.Format(CultureInfo.InvariantCulture, "({0})", constant.Value);
+                    constantExpression = string.Format(CultureInfo.InvariantCulture, "({0})", constant!.Value);
                     return NodeType.Constant;
                 }
             case ExpressionType.Convert:
                 {
                     var convertExpr = expr as UnaryExpression;
-                    string constant = null;
-                    var operandType = InverseExpressionInternal(convertExpr.Operand, recInfo, ref constant);
+                    string constant = null!;
+                    var operandType = InverseExpressionInternal(convertExpr!.Operand, recInfo, ref constant);
 
                     if (operandType == NodeType.Constant)
                         constantExpression = "((" + convertExpr.Type.Name + ")" + constant + ")";
                     else
-                        recInfo.InvertedExp = String.Format(recInfo.InvertedExp, "((" + convertExpr.Operand.Type.Name + ")" + RES + ")");
+                        recInfo.InvertedExp = string.Format(recInfo.InvertedExp, "((" + convertExpr.Operand.Type.Name + ")" + RES + ")");
                     return operandType;
                 }
             case ExpressionType.Negate:
                 {
                     var negateExpr = expr as UnaryExpression;
-                    string constant = null;
-                    var operandType = InverseExpressionInternal(negateExpr.Operand, recInfo, ref constant);
+                    string constant = null!;
+                    var operandType = InverseExpressionInternal(negateExpr!.Operand, recInfo, ref constant);
 
                     if (operandType == NodeType.Constant)
                         constantExpression = "(-" + constant + ")";
                     else
-                        recInfo.InvertedExp = String.Format(recInfo.InvertedExp, "(-" + RES + ")");
+                        recInfo.InvertedExp = string.Format(recInfo.InvertedExp, "(-" + RES + ")");
                     return operandType;
                 }
             case ExpressionType.Not:
                 {
                     var convertExpr = expr as UnaryExpression;
 
-                    string constant = null;
-                    var operandType = InverseExpressionInternal(convertExpr.Operand, recInfo, ref constant);
+                    string constant = null!;
+                    var operandType = InverseExpressionInternal(convertExpr!.Operand, recInfo, ref constant);
 
                     if (operandType == NodeType.Constant)
                         constantExpression = "(" + NodeTypeToString(ExpressionType.Not) + constant + ")";
                     else
-                        recInfo.InvertedExp = String.Format(recInfo.InvertedExp, "(" + NodeTypeToString(ExpressionType.Not) + RES + ")");
+                        recInfo.InvertedExp = string.Format(recInfo.InvertedExp, "(" + NodeTypeToString(ExpressionType.Not) + RES + ")");
                     return operandType;
                 }
             case ExpressionType.Call:
                 {
                     var methodExpr = expr as MethodCallExpression;
 
-                    var methodName = methodExpr.Method.DeclaringType.Name + "." + methodExpr.Method.Name;
+                    var methodName = methodExpr!.Method.DeclaringType!.Name + "." + methodExpr.Method.Name;
                     if (!inversedMathFuncs.ContainsKey(methodName))
                     {
-                        throw new InverseException(String.Format("Unsupported method call expression: {0}", expr));
+                        throw new InverseException(string.Format("Unsupported method call expression: {0}", expr));
                     }
 
-                    string leftConstant = null, rightConstant = null;
+                    string leftConstant = null!, rightConstant = null!;
                     var leftOperandType = InverseExpressionInternal(methodExpr.Arguments[0], recInfo, ref leftConstant);
                     NodeType? rightOperandType = null;
-                    Expression leftOperand, rightOperand = null;
+                    Expression leftOperand, rightOperand = null!;
 
                     leftOperand = methodExpr.Arguments[0];
 
@@ -216,7 +216,7 @@ public class Inverter
                         rightOperand = methodExpr.Arguments[1];
                     }
 
-                    string inversedRes = null;
+                    string inversedRes = null!;
                     if (leftOperandType == NodeType.Variable)
                         inversedRes = inversedMathFuncs[methodName, ConstantPlace.Right](rightConstant);
                     else
@@ -232,7 +232,7 @@ public class Inverter
                         }
 
                     if (inversedRes != null)
-                        recInfo.InvertedExp = String.Format(recInfo.InvertedExp, inversedRes);
+                        recInfo.InvertedExp = string.Format(recInfo.InvertedExp, inversedRes);
 
                     return inversedRes == null ? NodeType.Constant : NodeType.Variable;
                 }
@@ -240,71 +240,58 @@ public class Inverter
                 {
                     var memberExpr = expr as MemberExpression;
 
-                    if (memberExpr.Member.DeclaringType.Name == "Math")
+                    if (memberExpr!.Member.DeclaringType!.Name == "Math")
                     {
-                        constantExpression = String.Format(CultureInfo.InvariantCulture, "({0})", memberExpr.Member.DeclaringType.Name + "." + memberExpr.Member.Name);
+                        constantExpression = string.Format(CultureInfo.InvariantCulture, "({0})", memberExpr.Member.DeclaringType.Name + "." + memberExpr.Member.Name);
                         return NodeType.Constant;
                     }
                     else
                     {
-                        throw new InverseException(String.Format("Unsupported method call expression: {0}", expr));
+                        throw new InverseException(string.Format("Unsupported method call expression: {0}", expr));
                     }
                 }
             default:
-                throw new InverseException(String.Format("Unsupported expression: {0}", expr));
+                throw new InverseException(string.Format("Unsupported expression: {0}", expr));
         }
     }
 
     private string NodeTypeToString(ExpressionType nodeType)
     {
-        switch (nodeType)
+        return nodeType switch
         {
-            case ExpressionType.Divide:
-                return "/";
-
-            case ExpressionType.Multiply:
-                return "*";
-
-            case ExpressionType.Subtract:
-                return "-";
-
-            case ExpressionType.Add:
-                return "+";
-
-            case ExpressionType.Not:
-                return "!";
-
-            default:
-                throw new Exception("Unkwnown binary node type: " + nodeType + "!");
-        }
+            ExpressionType.Divide => "/",
+            ExpressionType.Multiply => "*",
+            ExpressionType.Subtract => "-",
+            ExpressionType.Add => "+",
+            ExpressionType.Not => "!",
+            _ => throw new Exception("Unkwnown binary node type: " + nodeType + "!"),
+        };
     }
 
     private const string RES = "({0})";
-
-    private IExpressionParser _interpreter;
 
     #region Types for recursion func work
 
     internal enum NodeType
     {
         Variable,
-        Constant
+        Constant,
     }
 
     internal enum ConstantPlace
     {
         Left,
         Right,
-        Wherever
+        Wherever,
     }
 
     private class RecursiveInfo
     {
-        public string FoundedParamName;
-        public string InvertedExp;
+        public string FoundedParamName = null!;
+        public string InvertedExp = null!;
     }
 
-    private delegate String FuncExpressionDelegate(String constant);
+    private delegate string FuncExpressionDelegate(string constant);
 
     /// <summary>
     /// Dictionary for inversed funcs static initialize

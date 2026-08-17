@@ -12,11 +12,12 @@ internal static class ParserConstants
     public const string KeywordTypeof = "typeof";
     public const string KeywordDefault = "default";
 
-    public static readonly string[] ReservedKeywords = {
-            KeywordAs,
-            KeywordIs,
-            KeywordNew,
-            KeywordTypeof,
-            KeywordDefault
-        };
+    public static readonly string[] ReservedKeywords =
+    [
+        KeywordAs,
+        KeywordIs,
+        KeywordNew,
+        KeywordTypeof,
+        KeywordDefault
+    ];
 }

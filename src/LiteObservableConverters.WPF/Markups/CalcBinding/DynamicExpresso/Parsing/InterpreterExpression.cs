@@ -12,7 +12,6 @@ internal class InterpreterExpression : Expression
 {
     private readonly Interpreter _interpreter;
     private readonly string _expressionText;
-    private readonly IList<Parameter> _parameters;
     private Type _type;
 
     public InterpreterExpression(ParserArguments parserArguments, string expressionText, params ParameterWithPosition[] parameters)
@@ -20,7 +19,7 @@ internal class InterpreterExpression : Expression
         var settings = parserArguments.Settings.Clone();
         _interpreter = new Interpreter(settings);
         _expressionText = expressionText;
-        _parameters = parameters;
+        Parameters = parameters;
 
         // Take the parent expression's parameters and set them as an identifier that
         // can be accessed by any lower call
@@ -44,22 +43,16 @@ internal class InterpreterExpression : Expression
         _type = ReflectionExtensions.GetFuncType(parameters.Length);
     }
 
-    public IList<Parameter> Parameters
-    {
-        get { return _parameters; }
-    }
+    public IList<Parameter> Parameters { get; }
 
-    public override Type Type
-    {
-        get { return _type; }
-    }
+    public override Type Type => _type;
 
     internal LambdaExpression EvalAs(Type delegateType)
     {
         if (!IsCompatibleWithDelegate(delegateType))
-            return null;
+            return null!;
 
-        var lambdaExpr = _interpreter.ParseAsExpression(delegateType, _expressionText, _parameters.Select(p => p.Name).ToArray());
+        var lambdaExpr = _interpreter.ParseAsExpression(delegateType, _expressionText, [.. Parameters.Select(p => p.Name)]);
         _type = lambdaExpr.Type;
         return lambdaExpr;
     }
@@ -70,7 +63,7 @@ internal class InterpreterExpression : Expression
             return false;
 
         var genericTypeDefinition = target.GetGenericTypeDefinition();
-        return genericTypeDefinition == ReflectionExtensions.GetFuncType(_parameters.Count)
-            || genericTypeDefinition == ReflectionExtensions.GetActionType(_parameters.Count);
+        return genericTypeDefinition == ReflectionExtensions.GetFuncType(Parameters.Count)
+            || genericTypeDefinition == ReflectionExtensions.GetActionType(Parameters.Count);
     }
 }

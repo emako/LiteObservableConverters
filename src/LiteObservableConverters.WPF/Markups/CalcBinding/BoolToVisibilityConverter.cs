@@ -22,7 +22,7 @@ public class BoolToVisibilityConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var boolValue = value is bool ? (bool)value : (bool)(dynamic)value;
+        var boolValue = value is bool v ? v : (bool)(dynamic)value;
 
         if (boolValue)
             return Visibility.Visible;
