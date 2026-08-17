@@ -4,6 +4,8 @@
 
 Lite version of [ComputedConverters.WPF](https://github.com/emako/ComputedConverters.NET) with fewer features but better performance and a smaller surface area.
 
+To facilitate higher version integration, the source codes of [CalcBinding](https://github.com/Alex141/CalcBinding) and [DynamicExpresso](https://github.com/dynamicexpresso/DynamicExpresso) is built-in.
+
 ## Features
 
 - Common WPF `IValueConverter` / `IMultiValueConverter` implementations for MVVM bindings.
