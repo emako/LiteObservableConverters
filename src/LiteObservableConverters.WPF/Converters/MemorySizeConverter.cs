@@ -25,10 +25,10 @@ namespace LiteObservableConverters;
 /// XAML examples:
 /// <code language="xml">
 /// <!-- FileInfo.Length (bytes) → "1.5 GB" -->
-/// Text="{Binding Length, Converter={x:Static loc:MemorySizeConverter.Instance}}"
+/// Text="{Binding Length, Converter={x:Static c:MemorySizeConverter.Instance}}"
 ///
 /// <!-- Value already in MB, force binary IEC symbols -->
-/// &lt;loc:MemorySizeConverter InputUnit="Megabyte" SymbolStyle="Iec" Format="0.00" /&gt;
+/// &lt;c:MemorySizeConverter InputUnit="Megabyte" SymbolStyle="Iec" Format="0.00" /&gt;
 /// </code>
 /// </para>
 /// </remarks>

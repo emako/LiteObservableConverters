@@ -11,14 +11,14 @@ To facilitate higher version integration, the source codes of [CalcBinding](http
 - Common WPF `IValueConverter` / `IMultiValueConverter` implementations for MVVM bindings.
 - `ValueConverterGroup` for chaining converters in XAML.
 - Markup extensions for XAML constants (visibility, primitives, etc.).
-- XAML namespace: `xmlns:loc="http://schemas.github.com/liteobservableconverters/2026/xaml"`.
+- XAML namespace: `xmlns:c="http://schemas.github.com/liteobservableconverters/2026/xaml"`.
 
 ## Usage
 
 > Implementation in progress. See `src/WpfApp` for upcoming demos.
 
 ```xaml
-xmlns:loc="http://schemas.github.com/liteobservableconverters/2026/xaml"
+xmlns:c="http://schemas.github.com/liteobservableconverters/2026/xaml"
 ```
 
 ## Project layout
