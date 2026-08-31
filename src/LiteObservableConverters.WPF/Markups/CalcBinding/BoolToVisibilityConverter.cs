@@ -8,7 +8,7 @@ namespace LiteObservableConverters.CalcBinding;
 /// <summary>
 /// Common BoolToVisibility converter with FalseToVisibility parameter
 /// </summary>
-public class BoolToVisibilityConverter : IValueConverter
+internal sealed class BoolToVisibilityConverter : IValueConverter
 {
     public BoolToVisibilityConverter()
     {
