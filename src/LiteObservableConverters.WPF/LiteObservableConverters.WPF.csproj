@@ -5,7 +5,7 @@
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
-        <Version>2.0.1</Version>
+        <Version>2.0.2</Version>
         <AssemblyName>LiteObservableConverters</AssemblyName>
         <RootNamespace>LiteObservableConverters</RootNamespace>
         <PackageId>LiteObservableConverters</PackageId>
