@@ -76,8 +76,7 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
             try
             {
                 if (targetType == typeof(bool) && value.GetType() == typeof(Visibility))
-                    value = new BoolToVisibilityConverter(FalseToVisibility)
-                        .ConvertBack(value, targetType, null!, culture);
+                    value = (Visibility)value == Visibility.Visible;
 
                 if (value is string v && _compiledExpression.Expression.Type != value.GetType())
                     value = ParseStringToObject(v, _compiledExpression.Expression.Type);
@@ -137,11 +136,14 @@ public class CalcConverter : IValueConverter, IMultiValueConverter
 
             if (!StringFormatDefined)
             {
-                if (targetType == typeof(Visibility))
+                if (targetType == typeof(Visibility) && result is not Visibility)
                 {
-                    if (result is not Visibility)
-                        result = new BoolToVisibilityConverter(FalseToVisibility)
-                                    .Convert(result, targetType, null!, culture);
+                    var boolValue = result is bool b ? b : (bool)(dynamic)result;
+                    result = boolValue
+                        ? Visibility.Visible
+                        : FalseToVisibility == FalseToVisibility.Collapsed
+                            ? Visibility.Collapsed
+                            : Visibility.Hidden;
                 }
 
                 if (targetType == typeof(String))
